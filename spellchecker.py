@@ -10,11 +10,15 @@ def readDict():
   return words
 
 def lowercase(input, words, wordsHash):
-	for word in words:
-		if input.lower() == word:
-			wordsHash[input] = word
-			#stop and return
-			break
+	lowercase = input.lower()
+	if lowercase not in wordsHash:
+		for word in words:
+			if lowercase == word:
+				wordsHash[input] = word
+				#stop and return
+				break
+	else:
+		wordsHash[input] = wordsHash[lowercase]
 	return wordsHash
 
 def repeated_letters(input, words, wordsHash):
@@ -22,11 +26,15 @@ def repeated_letters(input, words, wordsHash):
 		group = list(g)
 		while group:
 			rep_input = input.replace("".join(group), letter)
-			for word in words:
-				if rep_input == word:
-					wordsHash[input] = word
-					#stop and return
-					return wordsHash
+			if rep_input not in wordsHash:
+				for word in words:
+					if rep_input == word:
+						wordsHash[input] = word
+						#stop and return
+						return wordsHash
+			else:
+				wordsHash[input] = wordsHash[rep_input]
+				break
 			group = group[:-1]
 	return wordsHash
 
@@ -36,11 +44,14 @@ def vowels(input, words, wordsHash):
 		if letter in vowels:
 			for vowel in vowels:
 				vow_input = input.replace(letter, vowel)
-				for word in words:
-					if vow_input == word:
-						wordsHash[input] = word
-						#stop and return
-						return wordsHash
+				if vow_input not in wordsHash:
+					for word in words:
+						if vow_input == word:
+							wordsHash[input] = word
+							#stop and return
+							return wordsHash
+				else:
+					wordsHash[input] = wordsHash[vow_input]
 	return wordsHash
 			
 def spellcheck():
