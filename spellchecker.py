@@ -1,6 +1,6 @@
 import sys
 import itertools
-from trie.py import Trie
+from trie import Trie
 
 def readDict():
   #get words from /usr/share/dict/words
@@ -10,72 +10,42 @@ def readDict():
 	words.insert(word)
   return words
 
-def lowercase(input, words, wordsHash):
-	lowercase = input.lower()
-	if lowercase not in wordsHash:
-		for word in words:
-			if lowercase == word:
-				wordsHash[input] = word
-				#stop and return
-				break
+def get_possible_words(word):
+  #get possible words for duplicate letters
+  prev = None
+  states = []
+  for letter in word:
+	new_states = []
+	if letter != prev:
+		#no duplicate
+		if not states:
+			states.append(letter)
+		else:
+			for i in range(0, len(states)):
+				states[i] += letter
 	else:
-		wordsHash[input] = wordsHash[lowercase]
-	return wordsHash
-
-def repeated_letters(input, words, wordsHash):
-	for letter, g in itertools.groupby(input):
-		group = list(g)
-		while group:
-			rep_input = input.replace("".join(group), letter)
-			if rep_input not in wordsHash:
-				for word in words:
-					if rep_input == word:
-						wordsHash[input] = word
-						#stop and return
-						return wordsHash
-			else:
-				wordsHash[input] = wordsHash[rep_input]
-				break
-			group = group[:-1]
-	return wordsHash
-
-def vowels(input, words, wordsHash):
-	vowels = 'aeiouy'
-	for letter in input:
-		if letter in vowels:
-			for vowel in vowels:
-				vow_input = input.replace(letter, vowel)
-				if vow_input not in wordsHash:
-					for word in words:
-						if vow_input == word:
-							wordsHash[input] = word
-							#stop and return
-							return wordsHash
-				else:
-					wordsHash[input] = wordsHash[vow_input]
-	return wordsHash
-			
+		#duplicate, add new states
+		for state in states:
+			new_states.append(state+letter)
+	states += new_states
+	prev = letter
+  return states
+	
 def spellcheck():
   #get dictionary
   words = readDict()
-  wordsHash = {}
 
   #take input and return suggestion until killed
-  input = raw_input('> ')
+  input = raw_input('> ').lower()
   while input != 'kill':
-	if input not in wordsHash:
-		#check if word is correct
-		for word in words:
-			if input == word:
-				wordsHash[input] = word
-		if input not in wordsHash:
-			#apply spelling corrections
-			wordsHash = lowercase(input, words, wordsHash)
-			if input not in wordsHash:
-				wordsHash = repeated_letters(input, words, wordsHash)
-				if input not in wordsHash:
-					wordsHash = vowels(input, words, wordsHash)
-	if input not in wordsHash:
-		wordsHash[input] = 'No suggestions'
-	sys.stdout.write(wordsHash[input] + '\n')
-	input = raw_input('> ')
+  	valid_words = []
+	states = get_possible_words(input)
+	for state in states:
+		if words.contains(state):
+			valid_words.append(state)
+	if not valid_words:
+		output = 'NO SUGGESTION'
+	else:
+		output = valid_words[0]
+	sys.stdout.write(output+'\n')
+	input = raw_input('> ').lower()
