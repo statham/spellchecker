@@ -20,13 +20,14 @@ def lowercase(input, words, wordsHash):
 def repeated_letters(input, words, wordsHash):
 	for letter, g in itertools.groupby(input):
 		group = list(g)
-		if len(group) > 1:
+		while group:
 			rep_input = input.replace("".join(group), letter)
 			for word in words:
 				if rep_input == word:
 					wordsHash[input] = word
 					#stop and return
 					return wordsHash
+			group = group[:-1]
 	return wordsHash
 
 def vowels(input, words, wordsHash):
