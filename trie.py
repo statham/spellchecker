@@ -11,12 +11,12 @@ class Trie:
 			node = node.children[letter.lower()]
 		node.word = word
 
-	def contains(self, word):
+	def get(self, word):
 		node = self
 		for letter in word:
 			if letter not in node.children:
-				return False
+				return None
 			node = node.children[letter]
 		if node.word:
-			return True
-		return False
+			return node.word
+		return None

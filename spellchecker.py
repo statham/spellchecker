@@ -48,13 +48,16 @@ def spellcheck():
   input = raw_input('> ').lower()
   while input != 'kill':
   	valid_words = []
-	states = get_possible_words(input)
-	for state in states:
-		if words.contains(state):
-			valid_words.append(state)
-	if not valid_words:
-		output = 'NO SUGGESTION'
+	if words.get(input):
+		output = words.get(input)
 	else:
-		output = valid_words[0]
+		states = get_possible_words(input)
+		for state in states:
+			if words.get(state):
+				valid_words.append(words.get(state))
+		if not valid_words:
+			output = 'NO SUGGESTION'
+		else:
+			output = valid_words[0]
 	sys.stdout.write(output+'\n')
 	input = raw_input('> ').lower()
