@@ -1,5 +1,4 @@
 import sys
-import itertools
 from trie import Trie
 
 def readDict():
@@ -14,19 +13,29 @@ def get_possible_words(word):
   #get possible words for duplicate letters
   prev = None
   states = []
+  vowels = 'aeiouy'
   for letter in word:
 	new_states = []
-	if letter != prev:
+	if (letter != prev) and (letter not in vowels):
 		#no duplicate
 		if not states:
 			states.append(letter)
 		else:
 			for i in range(0, len(states)):
 				states[i] += letter
-	else:
+	elif letter == prev:
 		#duplicate, add new states
 		for state in states:
 			new_states.append(state+letter)
+	else:
+		#vowel
+		if not states:
+			for vowel in vowels:
+				states.append(vowel)
+		else:
+			for state in states:
+				for vowel in vowels:
+					new_states.append(state+vowel)
 	states += new_states
 	prev = letter
   return states
