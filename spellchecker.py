@@ -8,17 +8,14 @@ def readDict():
 	words.append(word)
   return words
 
-def spellcheck(input, words, wordsHash):
-  if input not in wordsHash:
-
-    	#tolowercase
-	lowercase = input.lower()
+def lower_case(input, words, wordsHash):
 	for word in words:
-		if (input == word) or (lowercase == word):
+		if input.lower() == word:
 			wordsHash[input] = word
 			#stop and return
+			return wordsHash
 
-	#repeated letters
+def repeated_letters(input, words, wordsHash):
 	for letter, g in itertools.groupby(input):
 		group = list(g)
 		if len(group) > 1:
@@ -27,9 +24,9 @@ def spellcheck(input, words, wordsHash):
 				if rep_input == word:
 					wordsHash[input] = word
 					#stop and return
+					return wordsHash
 
-	#incorrect vowels
-	vowels = 'aeiou'
+def vowels(input, words, wordsHash):
 	for letter in vowels_input:
 		if letter in vowels:
 			for vowel in vowels:
@@ -38,10 +35,9 @@ def spellcheck(input, words, wordsHash):
 					if vow_input == word:
 						wordsHash[input] = word
 						#stop and return
+						return wordsHash
 			
-  return wordsHash[input]
-
-def run():
+def spellcheck():
   #get dictionary
   words = readDict()
   wordsHash = {}
