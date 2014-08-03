@@ -1,12 +1,13 @@
 import sys
 import itertools
+from trie.py import Trie
 
 def readDict():
   #get words from /usr/share/dict/words
   f = open('/usr/share/dict/words', 'r')
-  words = []
+  words = Trie()
   for word in f.read().split('\n'):
-	words.append(word)
+	words.insert(word)
   return words
 
 def lowercase(input, words, wordsHash):

@@ -6,8 +6,8 @@ Class Trie:
 	def insert(self, word):
 		node = self
 		for letter in word:
-			if letter not in node.children:
-				node.childrend[letter] = Trie()
-			node = node.children[letter]
+			if letter.lower() not in node.children:
+				node.childrend[letter.lower()] = Trie()
+			node = node.children[letter.lower()]
 		node.word = word
 
